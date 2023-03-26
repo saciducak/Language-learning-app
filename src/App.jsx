@@ -1,19 +1,23 @@
 import { useState ,useEffect } from 'react'
-import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   const myQuiz = [
-    {  damıtık : 'hip place' , sacid : 'uğrak mekan' },
+/*   {  damıtık : 'hip place' , sacid : 'uğrak mekan' },
     {  damıtık : 'put on airs' , sacid : 'havalara girmek' },
     {  damıtık : 'hip place' , sacid : 'uğrak mekan' },
     {  damıtık : 'snot-nosed' , sacid : 'sümüklü' },
     {  damıtık : 'bread and butte' , sacid : 'ekmek kapısı' },
     {  damıtık : 'af / as fuck' , sacid : 'deli gibi' },
     {  damıtık : 'be on tenterhooks' , sacid : 'diken üstünde olmak' },
-    {  damıtık : 'chat about the weather' , sacid : 'havadan sudan konuşmak' },   
+    {  damıtık : 'chat about the weather' , sacid : 'havadan sudan konuşmak' }
+*/    
+    {  damıtık : 'bubble' , sacid : 'baloncuk' },
+    {  damıtık : 'civil' , sacid : 'sivil' },
+    {  damıtık : 'coal' , sacid : 'kömür' },
+    {  damıtık : 'bread' , sacid : 'ekmek' },
+    {  damıtık : 'butter' , sacid : 'tereyağı' },
+    {  damıtık : 'milk' , sacid : 'süt' }
   ]
 
   const[input, setInput] = useState('')
@@ -30,34 +34,36 @@ function App() {
       setCurrent(randomIndex)
   }
 
-  const handleChange = evt => {
-      setInput(evt.target.value)
+  const handleChange = (e) => {
+      setInput(e.target.value)
   }
-  const handleSubmit = evt => {
-      evt.preventDefault()
+  const handleSubmit = (e) => {
+      e.preventDefault()
 
-      if(input === myQuiz[current].sacid) {
+      if(input.toLowerCase() === myQuiz[current].sacid) {
           setStreak(streak + 1)
-          setMaxStreak(Math.max(streak,maxStreak))
+          setMaxStreak(streak + 1 > maxStreak ? streak + 1 : maxStreak)
           setError(false)
 
-          localStorage.setItem('maxStreat', Math.max(streak,maxStreak))
+          localStorage.setItem('maxStreat',streak + 1 > maxStreak ? streak + 1 : maxStreak)
           localStorage.setItem('streat', streak +1)
       }
       else{
+        const h = myQuiz[current].damıtık
+        const r = myQuiz[current].sacid
+        setError('Wrong! the correct answer for ${h} is ${r} ')
         setStreak(0)
-        setError('Wrong! the correct answer for ${myQuiz[current].damıtık} is ${myQuiz[current].sacid} ')
-
         localStorage.setItem('streak', 0)
       }
+
       setInput('')
       setRandomMyQuiz()
   } 
 
   useEffect(() => {
     setRandomMyQuiz()
-    setStreak(localStorage.getItem('streak') || 0)
-    setMaxStreak(localStorage.getItem('maxStreak') || 0)
+    setStreak(parseInt(localStorage.getItem('streak')) || 0)
+    setMaxStreak(parseInt(localStorage.getItem('maxStreak')) || 0)
   }, [])
 
   return (
@@ -72,13 +78,19 @@ function App() {
           </p>
         </header>
         <div className='textSide'>
-          {myQuiz[current].damıtık}
+          <p> {myQuiz[current].damıtık} </p>
         </div>
         <div className='submit'>
           <form onSubmit="{handleSubmit}" className='submitForm'> 
             <input type="text" value={input} onChange={handleChange} className='input'/>
           </form>
         </div>
+
+        {error && 
+            <div className='error'> 
+              <p> {error} </p>
+            </div>
+        }
       </div>
      
     </div>
